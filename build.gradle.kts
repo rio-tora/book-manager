@@ -3,7 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "2.2.21"
 	id("org.springframework.boot") version "4.0.2"
 	id("io.spring.dependency-management") version "1.1.7"
-	id("nu.studer.jooq") version "9.0.0"
+	id("nu.studer.jooq") version "10.2"
 }
 
 group = "com.example"
@@ -48,7 +48,7 @@ tasks.withType<Test> {
 
 // jOOQのコード生成設定
 jooq {
-	version.set("3.19.1") // Spring Boot 3.2.xが管理するjOOQのバージョンに合わせる
+	version.set("3.19.1")
 
 	configurations {
 		create("main") {
@@ -69,8 +69,8 @@ jooq {
 						excludes = "flyway_schema_history"
 					}
 					target.apply {
-						packageName = "com.example.bookmanager.jooq" // 自動生成ファイルの置き場所
-						directory = "build/generated-src/jooq/main"  // 出力先フォルダ
+						packageName = "com.example.bookmanager.jooq"
+						directory = "build/generated-src/jooq/main"
 					}
 				}
 			}
@@ -78,7 +78,6 @@ jooq {
 	}
 }
 
-// 生成ツールを動かすためにドライバを追加
 dependencies {
-	jooqGenerator("org.postgresql:postgresql:42.7.1")
+	jooqGenerator("org.postgresql:postgresql:42.7.7")
 }
