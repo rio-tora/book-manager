@@ -1,26 +1,25 @@
--- 著者テーブル
 CREATE TABLE authors
 (
-    id         SERIAL PRIMARY KEY,
+    id         BIGSERIAL PRIMARY KEY,
     name       VARCHAR(255) NOT NULL,
-    birth_date DATE         NOT NULL
+    birth_date DATE         NOT NULL,
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
--- 書籍テーブル
 CREATE TABLE books
 (
-    id     SERIAL PRIMARY KEY,
-    title  VARCHAR(255) NOT NULL,
-    price  INT          NOT NULL CHECK (price >= 0),
-    status VARCHAR(50)  NOT NULL
+    id                 BIGSERIAL PRIMARY KEY,
+    title              VARCHAR(255)   NOT NULL,
+    price              NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
+    publication_status VARCHAR(20)    NOT NULL CHECK (publication_status IN ('UNPUBLISHED', 'PUBLISHED')),
+    created_at         TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
+    updated_at         TIMESTAMPTZ    NOT NULL DEFAULT NOW()
 );
 
--- 書籍と著者の紐付け（多対多）テーブル
 CREATE TABLE book_authors
 (
-    book_id   INT NOT NULL,
-    author_id INT NOT NULL,
-    PRIMARY KEY (book_id, author_id),
-    CONSTRAINT fk_book FOREIGN KEY (book_id) REFERENCES books (id) ON DELETE CASCADE,
-    CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES authors (id) ON DELETE CASCADE
+    book_id   BIGINT NOT NULL REFERENCES books (id) ON DELETE CASCADE,
+    author_id BIGINT NOT NULL REFERENCES authors (id) ON DELETE RESTRICT,
+    PRIMARY KEY (book_id, author_id)
 );
