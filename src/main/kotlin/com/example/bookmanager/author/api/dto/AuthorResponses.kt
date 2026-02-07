@@ -1,6 +1,6 @@
 package com.example.bookmanager.author.api.dto
 
-import com.example.bookmanager.book.api.BookSummaryResponse
+import com.example.bookmanager.book.api.dto.BookSummaryResponse
 import com.example.bookmanager.author.domain.Author
 import java.time.LocalDate
 

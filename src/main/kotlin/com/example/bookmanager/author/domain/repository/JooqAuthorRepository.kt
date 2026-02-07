@@ -39,20 +39,27 @@ class JooqAuthorRepository(
         )
     }
 
-    override fun findAllByIds(ids: Collection<Long>): List<Author> {
-        if (ids.isEmpty()) return emptyList()
-
-        return dsl.select(AUTHORS.ID, AUTHORS.NAME, AUTHORS.BIRTH_DATE)
+    override fun update(id: Long, name: String?, birthDate: LocalDate?): Author? {
+        val current = dsl
+            .select(AUTHORS.ID, AUTHORS.NAME, AUTHORS.BIRTH_DATE)
             .from(AUTHORS)
-            .where(AUTHORS.ID.`in`(ids))
-            .fetch()
-            .map { record ->
-                Author(
-                    id = record.get(AUTHORS.ID)!!,
-                    name = record.get(AUTHORS.NAME)!!,
-                    birthDate = record.get(AUTHORS.BIRTH_DATE)!!
-                )
-            }
+            .where(AUTHORS.ID.eq(id))
+            .fetchOne() ?: return null
+
+        val nextName = name ?: current.get(AUTHORS.NAME) ?: error("name is null")
+        val nextBirthDate = birthDate ?: current.get(AUTHORS.BIRTH_DATE) ?: error("birth_date is null")
+
+        dsl.update(AUTHORS)
+            .set(AUTHORS.NAME, nextName)
+            .set(AUTHORS.BIRTH_DATE, nextBirthDate)
+            .where(AUTHORS.ID.eq(id))
+            .execute()
+
+        return Author(
+            id = id,
+            name = nextName,
+            birthDate = nextBirthDate
+        )
     }
 
     override fun existsAllByIds(ids: Collection<Long>): Boolean {

@@ -2,7 +2,8 @@ package com.example.bookmanager.author.api
 
 import com.example.bookmanager.author.api.dto.AuthorResponse
 import com.example.bookmanager.author.api.dto.CreateAuthorRequest
-import com.example.bookmanager.author.domain.Author
+import com.example.bookmanager.author.api.dto.UpdateAuthorRequest
+import com.example.bookmanager.author.api.dto.toResponse
 import com.example.bookmanager.author.service.AuthorService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -34,10 +35,16 @@ class AuthorController(
         return author.toResponse()
     }
 
-    private fun Author.toResponse(): AuthorResponse =
-        AuthorResponse(
-            id = this.id,
-            name = this.name,
-            birthDate = this.birthDate
+    @PatchMapping("/{id}")
+    open fun update(
+        @PathVariable id: Long,
+        @Valid @RequestBody request: UpdateAuthorRequest
+    ): AuthorResponse {
+        val updated = authorService.update(
+            id = id,
+            name = request.name,
+            birthDate = request.birthDate
         )
+        return updated.toResponse()
+    }
 }

@@ -6,6 +6,6 @@ import java.time.LocalDate
 interface AuthorRepository {
     fun create(name: String, birthDate: LocalDate): Author
     fun findById(id: Long): Author?
-    fun findAllByIds(ids: Collection<Long>): List<Author>
+    fun update(id: Long, name: String?, birthDate: LocalDate?): Author?
     fun existsAllByIds(ids: Collection<Long>): Boolean
 }
