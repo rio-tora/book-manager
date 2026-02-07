@@ -3,6 +3,9 @@
 - 書籍と著者の登録・更新
 - 著者に紐づく本の取得
 
+## 実行手順
+docker compose up -d → gradlew generateJooq → gradlew bootRun
+
 ## 実装内容
 - Author API
   - POST /authors
