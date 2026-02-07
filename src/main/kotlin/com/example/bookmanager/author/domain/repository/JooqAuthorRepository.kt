@@ -1,7 +1,7 @@
 package com.example.bookmanager.author.domain.repository
 
 import com.example.bookmanager.author.domain.Author
-import com.example.bookmanager.author.domain.BookSummary
+import com.example.bookmanager.author.domain.AuthorBookSummary
 import com.example.bookmanager.book.domain.PublicationStatus
 import com.example.bookmanager.jooq.Tables.AUTHORS
 import com.example.bookmanager.jooq.Tables.BOOK_AUTHORS
@@ -75,7 +75,7 @@ class JooqAuthorRepository(
         return count == ids.size
     }
 
-    override fun findBooksByAuthorId(authorId: Long): List<BookSummary> {
+    override fun findBooksByAuthorId(authorId: Long): List<AuthorBookSummary> {
         return dsl
             .select(
                 BOOKS.ID,
@@ -86,8 +86,9 @@ class JooqAuthorRepository(
             .from(BOOKS)
             .join(BOOK_AUTHORS).on(BOOKS.ID.eq(BOOK_AUTHORS.BOOK_ID))
             .where(BOOK_AUTHORS.AUTHOR_ID.eq(authorId))
+            .orderBy(BOOKS.ID.asc())
             .fetch { record ->
-                BookSummary(
+                AuthorBookSummary(
                     id = record.get(BOOKS.ID)!!,
                     title = record.get(BOOKS.TITLE)!!,
                     price = record.get(BOOKS.PRICE)!!,

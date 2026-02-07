@@ -1,4 +1,6 @@
 package com.example.bookmanager.book.domain
 
-class PublicationStatus {
+enum class PublicationStatus {
+    UNPUBLISHED,
+    PUBLISHED
 }

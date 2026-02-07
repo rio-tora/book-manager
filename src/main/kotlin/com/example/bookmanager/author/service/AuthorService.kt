@@ -1,6 +1,7 @@
 package com.example.bookmanager.author.service
 
 import com.example.bookmanager.author.domain.Author
+import com.example.bookmanager.author.domain.AuthorBookSummary
 import com.example.bookmanager.author.domain.repository.AuthorRepository
 import com.example.bookmanager.common.exception.BusinessRuleViolationException
 import com.example.bookmanager.common.exception.ResourceNotFoundException
@@ -49,5 +50,11 @@ class AuthorService(
         if (!authorRepository.existsAllByIds(distinctIds)) {
             throw BusinessRuleViolationException("One or more authors do not exist")
         }
+    }
+
+    @Transactional(readOnly = true)
+    open fun findBooksByAuthorId(authorId: Long): List<AuthorBookSummary> {
+        authorRepository.findById(authorId) ?: throw ResourceNotFoundException("Author", authorId)
+        return authorRepository.findBooksByAuthorId(authorId)
     }
 }

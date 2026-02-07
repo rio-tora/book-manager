@@ -1,7 +1,7 @@
 package com.example.bookmanager.author.domain.repository
 
 import com.example.bookmanager.author.domain.Author
-import com.example.bookmanager.author.domain.BookSummary
+import com.example.bookmanager.author.domain.AuthorBookSummary
 import java.time.LocalDate
 
 interface AuthorRepository {
@@ -9,5 +9,5 @@ interface AuthorRepository {
     fun findById(id: Long): Author?
     fun update(id: Long, name: String?, birthDate: LocalDate?): Author?
     fun existsAllByIds(ids: Collection<Long>): Boolean
-    fun findBooksByAuthorId(authorId: Long): List<BookSummary>
+    fun findBooksByAuthorId(authorId: Long): List<AuthorBookSummary>
 }

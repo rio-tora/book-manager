@@ -3,8 +3,10 @@ package com.example.bookmanager.author.api
 import com.example.bookmanager.author.api.dto.AuthorResponse
 import com.example.bookmanager.author.api.dto.CreateAuthorRequest
 import com.example.bookmanager.author.api.dto.UpdateAuthorRequest
+import com.example.bookmanager.author.api.dto.toBookSummaryResponse
 import com.example.bookmanager.author.api.dto.toResponse
 import com.example.bookmanager.author.service.AuthorService
+import com.example.bookmanager.book.api.dto.BookSummaryResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -46,5 +48,11 @@ class AuthorController(
             birthDate = request.birthDate
         )
         return updated.toResponse()
+    }
+
+    @GetMapping("/{id}/books")
+    fun getBooksByAuthor(@PathVariable id: Long): ResponseEntity<List<BookSummaryResponse>> {
+        val books = authorService.findBooksByAuthorId(id)
+        return ResponseEntity.ok(books.map { it.toBookSummaryResponse() })
     }
 }

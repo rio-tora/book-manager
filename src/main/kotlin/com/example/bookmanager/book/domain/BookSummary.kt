@@ -1,6 +1,5 @@
-package com.example.bookmanager.author.domain
+package com.example.bookmanager.book.domain
 
-import com.example.bookmanager.book.domain.PublicationStatus
 import java.math.BigDecimal
 
 data class BookSummary(
