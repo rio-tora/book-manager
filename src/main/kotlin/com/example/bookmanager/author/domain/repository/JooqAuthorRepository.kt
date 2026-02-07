@@ -1,7 +1,11 @@
 package com.example.bookmanager.author.domain.repository
 
 import com.example.bookmanager.author.domain.Author
+import com.example.bookmanager.author.domain.BookSummary
+import com.example.bookmanager.book.domain.PublicationStatus
 import com.example.bookmanager.jooq.Tables.AUTHORS
+import com.example.bookmanager.jooq.Tables.BOOK_AUTHORS
+import com.example.bookmanager.jooq.tables.Books.BOOKS
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
@@ -69,5 +73,26 @@ class JooqAuthorRepository(
             .where(AUTHORS.ID.`in`(ids))
             .fetchOne(0, Int::class.java) ?: 0
         return count == ids.size
+    }
+
+    override fun findBooksByAuthorId(authorId: Long): List<BookSummary> {
+        return dsl
+            .select(
+                BOOKS.ID,
+                BOOKS.TITLE,
+                BOOKS.PRICE,
+                BOOKS.PUBLICATION_STATUS
+            )
+            .from(BOOKS)
+            .join(BOOK_AUTHORS).on(BOOKS.ID.eq(BOOK_AUTHORS.BOOK_ID))
+            .where(BOOK_AUTHORS.AUTHOR_ID.eq(authorId))
+            .fetch { record ->
+                BookSummary(
+                    id = record.get(BOOKS.ID)!!,
+                    title = record.get(BOOKS.TITLE)!!,
+                    price = record.get(BOOKS.PRICE)!!,
+                    publicationStatus = PublicationStatus.valueOf(record.get(BOOKS.PUBLICATION_STATUS)!!)
+                )
+            }
     }
 }
