@@ -94,3 +94,11 @@ sourceSets {
 		}
 	}
 }
+
+tasks.named("compileKotlin") {
+	dependsOn("generateJooq")
+}
+
+tasks.named("compileJava") {
+	dependsOn("generateJooq")
+}
