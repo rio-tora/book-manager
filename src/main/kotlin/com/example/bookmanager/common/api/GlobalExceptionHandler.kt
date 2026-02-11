@@ -79,9 +79,19 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BusinessRuleViolationException::class)
-    fun handleBusinessRuleViolation(ex: BusinessRuleViolationException): ResponseEntity<ApiErrorResponse> {
+    fun handleBusinessRuleViolation(ex: BusinessRuleViolationException): ResponseEntity<ValidationErrorResponse> {
+        val error = FieldValidationError(
+            field = "business_rule",
+            reason = ex.message ?: "Invalid operation"
+        )
+
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(ApiErrorResponse(message = ex.message ?: "Business rule violation"))
+            .body(
+                ValidationErrorResponse(
+                    message = "Business rule violation",
+                    errors = listOf(error)
+                )
+            )
     }
 }
