@@ -45,6 +45,10 @@ class BookService(
         publicationStatus: PublicationStatus?,
         authorIds: List<Long>?
     ): Book {
+        if (title != null && title.isBlank()) {
+            throw BusinessRuleViolationException("title must not be blank")
+        }
+
         authorIds?.let { authorService.validateAllAuthorsExist(it) }
 
         return try {

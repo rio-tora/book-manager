@@ -25,8 +25,3 @@ fun AuthorBookSummary.toBookSummaryResponse(): BookSummaryResponse =
         price = price,
         publicationStatus = publicationStatus
     )
-
-data class AuthorBooksResponse(
-    val author: AuthorResponse,
-    val books: List<BookSummaryResponse>
-)
